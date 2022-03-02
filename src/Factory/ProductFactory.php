@@ -2,31 +2,31 @@
 
 namespace App\Factory;
 
-use App\Entity\Phone;
-use App\Repository\PhoneRepository;
+use App\Entity\Product;
+use App\Repository\ProductRepository;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 
 /**
- * @extends ModelFactory<Phone>
+ * @extends ModelFactory<Product>
  *
- * @method static Phone|Proxy createOne(array $attributes = [])
- * @method static Phone[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static Phone|Proxy find(object|array|mixed $criteria)
- * @method static Phone|Proxy findOrCreate(array $attributes)
- * @method static Phone|Proxy first(string $sortedField = 'id')
- * @method static Phone|Proxy last(string $sortedField = 'id')
- * @method static Phone|Proxy random(array $attributes = [])
- * @method static Phone|Proxy randomOrCreate(array $attributes = [])
- * @method static Phone[]|Proxy[] all()
- * @method static Phone[]|Proxy[] findBy(array $attributes)
- * @method static Phone[]|Proxy[] randomSet(int $number, array $attributes = [])
- * @method static Phone[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static PhoneRepository|RepositoryProxy repository()
- * @method Phone|Proxy create(array|callable $attributes = [])
+ * @method static Product|Proxy createOne(array $attributes = [])
+ * @method static Product[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static Product|Proxy find(object|array|mixed $criteria)
+ * @method static Product|Proxy findOrCreate(array $attributes)
+ * @method static Product|Proxy first(string $sortedField = 'id')
+ * @method static Product|Proxy last(string $sortedField = 'id')
+ * @method static Product|Proxy random(array $attributes = [])
+ * @method static Product|Proxy randomOrCreate(array $attributes = [])
+ * @method static Product[]|Proxy[] all()
+ * @method static Product[]|Proxy[] findBy(array $attributes)
+ * @method static Product[]|Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static Product[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static ProductRepository|RepositoryProxy repository()
+ * @method Product|Proxy create(array|callable $attributes = [])
  */
-final class PhoneFactory extends ModelFactory
+final class ProductFactory extends ModelFactory
 {
     public function __construct()
     {
@@ -68,6 +68,6 @@ final class PhoneFactory extends ModelFactory
 
     protected static function getClass(): string
     {
-        return Phone::class;
+        return Product::class;
     }
 }

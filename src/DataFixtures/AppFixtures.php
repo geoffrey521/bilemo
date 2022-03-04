@@ -13,14 +13,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $customer = new Customer();
-        $customer->setEmail('test@mail.com')
-            ->setContactFirstname('Bob')
-            ->setContactLastname('Sinclar')
-            ->setPhoneNumber('0148475062')
-            ->setSociety('DFiscount');
-        $manager->persist($customer);
-
         CustomerFactory::createMany(
             '5',
             [

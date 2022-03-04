@@ -3,15 +3,13 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use App\Entity\Product;
-
 use Nelmio\ApiDocBundle\Annotation\Model;
-
-
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 
@@ -43,9 +41,14 @@ class ProductController extends AbstractController
      * @OA\Tag(name="Products")
      * @Security(name="Bearer")
      */
-    public function listAction(ProductRepository $productRepository)
+    public function listAction(
+        ProductRepository $productRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    )
     {
-        $products = $productRepository->findAll();
+        $data = $productRepository->findAll();
+        $products = $paginator->paginate($data, $request->get('page', 1), 5);
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 

@@ -20,6 +20,17 @@ class AppFixtures extends Fixture
             ]
         );
 
+        $customer = new Customer();
+        $customer->setSociety('Phancy')
+            ->setPhoneNumber('09847261873')
+            ->setContactLastname('Earmann')
+            ->setContactFirstname('Hellott')
+            ->setEmail('eh.phancy@test.test')
+            ->setPassword('test');
+
+        $manager->persist($customer);
+
+
         ProductFactory::createMany(10);
 
         $manager->flush();

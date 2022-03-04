@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -28,7 +29,7 @@ use Zenstruck\Foundry\Proxy;
  */
 final class CustomerFactory extends ModelFactory
 {
-    public function __construct()
+    public function __construct(private UserPasswordHasherInterface $encoder)
     {
         parent::__construct();
     }
@@ -48,8 +49,14 @@ final class CustomerFactory extends ModelFactory
     {
         // see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
         return $this
-            // ->afterInstantiate(function(Customer $customer): void {})
-        ;
+            ->afterInstantiate(
+                function (Customer $customer) {
+                    $customer->setPassword(
+                        $this->encoder->hashPassword($customer, 'pass')
+                    );
+                }
+            )
+            ;
     }
 
     protected static function getClass(): string

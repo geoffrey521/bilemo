@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Customer;
 use App\Factory\CustomerFactory;
-use App\Factory\PhoneFactory;
+use App\Factory\ProductFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -13,14 +13,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $customer = new Customer();
-        $customer->setEmail('test@mail.com')
-            ->setContactFirstname('Bob')
-            ->setContactLastname('Sinclar')
-            ->setPhoneNumber('0148475062')
-            ->setSociety('DFiscount');
-        $manager->persist($customer);
-
         CustomerFactory::createMany(
             '5',
             [
@@ -28,7 +20,18 @@ class AppFixtures extends Fixture
             ]
         );
 
-        PhoneFactory::createMany(10);
+        $customer = new Customer();
+        $customer->setSociety('Phancy')
+            ->setPhoneNumber('09847261873')
+            ->setContactLastname('Earmann')
+            ->setContactFirstname('Hellott')
+            ->setEmail('eh.phancy@test.test')
+            ->setPassword('test');
+
+        $manager->persist($customer);
+
+
+        ProductFactory::createMany(10);
 
         $manager->flush();
     }

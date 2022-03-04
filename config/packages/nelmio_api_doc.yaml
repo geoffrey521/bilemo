@@ -1,0 +1,49 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: BileMo
+            description: Rest API
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: [ ]
+        paths:
+            /api/login_check:
+                post:
+                    summary: Get access to the api
+                    description: Field to sign in and get a token
+                    requestBody:
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        username: # <!--- form field name
+                                            type: string
+                                        password: # <!--- form field name
+                                            type: string
+                                    required:
+                                        - username
+                                        - password
+                    tags:
+                        - Login
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                        '401':
+                            description: Not authenticated
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc) # Accepts routes under /api except /api/doc

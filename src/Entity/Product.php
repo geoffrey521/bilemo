@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -11,34 +12,35 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $brand;
+    private string $brand;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $model;
+    private string $model;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $description;
+    private string $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $screenSize;
+    #[Groups(['show_product'])]
+    private string $screenSize;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $weight;
+    private string $weight;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $processor;
+    private string $processor;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $ram;
+    private string $ram;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $storage;
+    private string $storage;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $camera;
+    private string $camera;
 
     public function getId(): ?int
     {

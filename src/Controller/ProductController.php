@@ -34,6 +34,10 @@ class ProductController extends AbstractController
      *     response=401,
      *     description="must be connected"
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="this page does not contain any products"
+     * )
      * @OA\Parameter(
      *     name="page",
      *     in="query",
@@ -54,8 +58,9 @@ class ProductController extends AbstractController
 
         return $this->json(
             $products,
-            '200',
+            200,
             ['Content-Type' => 'application/json'],
+            ['groups' => 'list_products']
         );
     }
 
@@ -74,18 +79,24 @@ class ProductController extends AbstractController
      *     response=401,
      *     description="must be connected"
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="This product doesn't exist"
+     * )
      * @OA\Tag(name="Product")
      * @Security(name="Bearer")
      */
-    public function showAction(ProductRepository $productRepository,int $id)
+    public function showAction(ProductRepository $productRepository,int $id, SerializerInterface $serializer)
     {
         $product = $productRepository->findOneBy(['id' => $id]);
 
         return $this->json(
             $product,
-            '200',
+            200,
             ['Content-Type' => 'application/json'],
+            ['groups' => 'show_product']
         );
+
     }
 
 }

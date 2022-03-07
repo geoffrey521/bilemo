@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -12,41 +13,44 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private $gender;
+    private string $gender;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $firstname;
+    #[Groups(['list_users'])]
+    private string $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $lastname;
+    #[Groups(['list_users'])]
+    private string $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    #[Groups(['list_users'])]
+    private string $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $phone_number;
+    private string $phone_number;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $addressLine1;
+    private string $addressLine1;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $addressLine2;
+    private string $addressLine2;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $zipcode;
+    private string $zipcode;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $city;
+    private string $city;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $country;
+    private string $country;
 
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private $customer;
+    private Customer $customer;
 
     public function getId(): ?int
     {

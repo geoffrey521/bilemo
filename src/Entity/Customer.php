@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[UniqueEntity(fields: ['society'])]
@@ -18,31 +19,34 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private string $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $society;
+    private string $society;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $contactFirstname;
+    private string $contactFirstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $contactLastname;
+    private string $contactLastname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $phone_number;
+    private string $phone_number;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private $email;
+    private string $email;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: User::class, orphanRemoval: true)]
-    private $users;
+    private Collection $users;
 
     #[ORM\Column(type: "json")]
-    private $roles = [];
+    /**
+     * @var array<string>
+     */
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
 
     public function __construct()
     {

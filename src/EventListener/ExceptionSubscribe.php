@@ -9,14 +9,15 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class ExceptionSubscribe implements EventSubscriberInterface
 {
-    public function onExceptionEvent(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
+
         $exception = $event->getThrowable();
         if ($exception instanceof \Exception) {
             $data = [
                 'message' => $exception->getMessage()
             ];
-            $response = new JsonResponse($data);
+            $response = new JsonResponse($data, $exception->getStatusCode());
             $event->setResponse($response);
         }
     }

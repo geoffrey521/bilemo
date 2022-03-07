@@ -7,6 +7,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Product;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -64,12 +65,12 @@ class ProductController extends AbstractController
         );
     }
 
-    #[Route('/product/{id}', name: 'app_product_detail', methods: 'GET')]
+
     /**
      * Get product detail
      * @OA\Response(
      *     response=200,
-     *     description="Return entire datas from a product",
+     *     description="Return product datas",
      *     @OA\JsonContent(
      *        type="array",
      *        @OA\Items(ref=@Model(type=Product::class))
@@ -81,14 +82,19 @@ class ProductController extends AbstractController
      * )
      * @OA\Response(
      *     response=404,
-     *     description="This product doesn't exist"
+     *     description="Product not found"
      * )
      * @OA\Tag(name="Product")
      * @Security(name="Bearer")
      */
-    public function showAction(ProductRepository $productRepository,int $id, SerializerInterface $serializer)
+    #[Route('/products/{id}', name: 'app_product_detail', methods: 'GET')]
+    public function showAcion(ProductRepository $productRepository,int $id, SerializerInterface $serializer)
     {
         $product = $productRepository->findOneBy(['id' => $id]);
+
+        if (!$product) {
+            throw new NotFoundHttpException('Product not found');
+        }
 
         return $this->json(
             $product,

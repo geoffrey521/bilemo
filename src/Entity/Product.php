@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -11,34 +13,51 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $brand;
+    #[Groups(['show_product', 'list_products'])]
+    #[Assert\NotBlank]
+    private string $brand;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $model;
+    #[Groups(['show_product', 'list_products'])]
+    #[Assert\NotBlank]
+    private string $model;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $description;
+    #[Groups(['show_product'])]
+    private string $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $screenSize;
+    #[Groups(['show_product'])]
+    #[Assert\NotBlank]
+    private string $screenSize;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $weight;
+    #[Groups(['show_product'])]
+    #[Assert\NotBlank]
+    private string $weight;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $processor;
+    #[Groups(['show_product'])]
+    #[Assert\NotBlank]
+    private string $processor;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $ram;
+    #[Groups(['show_product'])]
+    #[Assert\NotBlank]
+    private string $ram;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $storage;
+    #[Groups(['show_product', 'list_products'])]
+    #[Assert\NotBlank]
+    private string $storage;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $camera;
+    #[Groups(['show_product'])]
+    #[Assert\NotBlank]
+    private string $camera;
 
     public function getId(): ?int
     {

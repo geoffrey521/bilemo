@@ -12,6 +12,8 @@ use App\Entity\Product;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 class ProductController extends AbstractController
@@ -32,6 +34,10 @@ class ProductController extends AbstractController
      *     response=401,
      *     description="must be connected"
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="this page does not contain any products"
+     * )
      * @OA\Parameter(
      *     name="page",
      *     in="query",
@@ -49,10 +55,48 @@ class ProductController extends AbstractController
     {
         $data = $productRepository->findAll();
         $products = $paginator->paginate($data, $request->get('page', 1), 5);
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
 
-        return $this->json($products);
+        return $this->json(
+            $products,
+            200,
+            ['Content-Type' => 'application/json'],
+            ['groups' => 'list_products']
+        );
+    }
+
+    #[Route('/product/{id}', name: 'app_product_detail', methods: 'GET')]
+    /**
+     * Get product detail
+     * @OA\Response(
+     *     response=200,
+     *     description="Return entire datas from a product",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Product::class))
+     *    )
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="must be connected"
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="This product doesn't exist"
+     * )
+     * @OA\Tag(name="Product")
+     * @Security(name="Bearer")
+     */
+    public function showAction(ProductRepository $productRepository,int $id, SerializerInterface $serializer)
+    {
+        $product = $productRepository->findOneBy(['id' => $id]);
+
+        return $this->json(
+            $product,
+            200,
+            ['Content-Type' => 'application/json'],
+            ['groups' => 'show_product']
+        );
+
     }
 
 }

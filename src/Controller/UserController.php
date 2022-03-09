@@ -86,7 +86,7 @@ class UserController extends AbstractController
      * @Security(name="Bearer")
      */
     #[Route('/users/{id}', name: 'app_user_show', methods: 'GET')]
-    public function showAction(int $id, UserRepository $userRepository, CustomerRepository $customerRepository)
+    public function showAction(int $id, UserRepository $userRepository)
     {
         $user = $userRepository->findOneBy([
             'id' => $id,
@@ -123,6 +123,22 @@ class UserController extends AbstractController
      *     @OA\Property(property="country", type="string", format="text")
      *    ),
      * ),
+     *    * @OA\Response(
+     *     response=200,
+     *     description="Return user datas",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=User::class))
+     *    )
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="Must be connected"
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="User not found"
+     * )
      *
      * @OA\Tag(name="User")
      * @Security(name="Bearer")
@@ -154,6 +170,43 @@ class UserController extends AbstractController
             '201',
             ['Content-Type' => 'application/json']
         );
+    }
 
+    /**
+     * Delete user
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="user {id} successfully deleted",
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="must be connected"
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="User not found"
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @Security(name="Bearer")
+     */
+    #[Route('/users/delete/{id}', name: 'app_user_delete', methods: 'DELETE')]
+    public function deleteUser(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository)
+    {
+        $user = $userRepository->findOneBy(['id' => $id]);
+
+        if ($user && $user->getCustomer() === $this->getUser()) {
+            $userId = $user->getId();
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            return $this->json(
+                "User " . $userId . " successfully deleted",
+                '200'
+            );
+        }
+
+        throw new NotFoundHttpException('User not found');
     }
 }

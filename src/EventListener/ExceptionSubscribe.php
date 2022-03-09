@@ -22,11 +22,11 @@ class ExceptionSubscribe implements EventSubscriberInterface
         }
     }
 
-//    #[ArrayShape([ExceptionEvent::class => "string"])]
+    #[ArrayShape([ExceptionEvent::class => "string"])]
     public static function getSubscribedEvents(): array
     {
         return [
-//            ExceptionEvent::class => 'onExceptionEvent',
+            ExceptionEvent::class => 'onExceptionEvent',
         ];
     }
 }

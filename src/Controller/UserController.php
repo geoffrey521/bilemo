@@ -18,9 +18,15 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class UserController extends AbstractController
 {
+    public function __construct(private CacheInterface $cache)
+    {
+    }
+
     #[Route('/users', name: 'app_user_list', methods: 'GET')]
     /**
      * Get customer's user list
@@ -54,7 +60,17 @@ class UserController extends AbstractController
         Request            $request
     )
     {
-        $users = $paginator->paginate($this->getUser()->getUsers(), $request->get('page', 1), 5);
+        $page = $request->query->getInt('page', 1);
+
+        $users = $this->cache->get('users_page-'.$page,
+            function (ItemInterface $item) use ($paginator, $page) {
+            $item->expiresAfter(3600);
+            return $paginator->paginate($this->getUser()->getUsers(), $page, 5);
+        });
+
+        if (count($users->getItems()) === 0) {
+            throw new NotFoundHttpException('No users found at this page');
+        }
 
         return $this->json(
             $users,
@@ -88,10 +104,14 @@ class UserController extends AbstractController
     #[Route('/users/{id}', name: 'app_user_show', methods: 'GET')]
     public function showAction(int $id, UserRepository $userRepository)
     {
-        $user = $userRepository->findOneBy([
-            'id' => $id,
-            'customer' => $this->getUser()
-        ]);
+        $user = $this->cache->get('user-'.$id,
+            function (ItemInterface $item) use ($id, $userRepository) {
+            $item->expiresAfter(3600);
+            return $userRepository->findOneBy([
+                'id' => $id,
+                'customer' => $this->getUser()
+            ]);
+        });
 
         if (!$user) {
             throw new NotFoundHttpException('User not found');
@@ -100,7 +120,8 @@ class UserController extends AbstractController
         return $this->json(
             $user,
             200,
-            ['Content-Type' => 'application/json']
+            ['Content-Type' => 'application/json'],
+            ['groups' => 'show_user']
         );
     }
 
@@ -132,16 +153,21 @@ class UserController extends AbstractController
      *    )
      * )
      * @OA\Response(
+     *     response=400,
+     *     description="Syntax error"
+     * )
+     * @OA\Response(
      *     response=401,
      *     description="Must be connected"
      * )
      * @OA\Response(
      *     response=404,
-     *     description="User not found"
+     *     description="incorrectly filled fields"
      * )
      *
      * @OA\Tag(name="User")
      * @Security(name="Bearer")
+     * @throws \Exception
      */
     #[Route('/users/create', name: 'app_user_create', methods: 'POST')]
     public function createUser(
@@ -152,18 +178,25 @@ class UserController extends AbstractController
     )
     {
         $data = $request->getContent();
+
+        if (!json_decode($data)) {
+            throw new BadRequestHttpException('Syntax error');
+        }
+
+
         $user = $serializer->deserialize($data, User::class, 'json');
+
         $user->setCustomer($this->getUser());
 
         $errors = $validator->validate($user);
 
-
         if ($errors->count() > 0) {
-            throw new BadRequestHttpException((string)$errors);
+            throw new BadRequestHttpException($errors);
         }
 
         $entityManager->persist($user);
         $entityManager->flush();
+        $this->cache->delete('users_page');
 
         return $this->json(
             'user added successfully',
@@ -200,6 +233,7 @@ class UserController extends AbstractController
             $userId = $user->getId();
             $entityManager->remove($user);
             $entityManager->flush();
+            $this->cache->delete('users_page');
 
             return $this->json(
                 "User " . $userId . " successfully deleted",

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -16,7 +17,7 @@ class User
     private int $id;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private string $gender;
+    private ?string $gender;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['list_users'])]
@@ -34,10 +35,11 @@ class User
     private string $phone_number;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
     private string $addressLine1;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $addressLine2;
+    private ?string $addressLine2;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $zipcode;
@@ -49,7 +51,6 @@ class User
     private string $country;
 
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
     private Customer $customer;
 
     public function getId(): ?int

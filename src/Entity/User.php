@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\EntityTimestampableTrait;
+use App\Model\EntityTimestampableInterface;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -11,8 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements EntityTimestampableInterface
 {
+    use EntityTimestampableTrait;
+    public function __construct()
+    {
+
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -205,4 +213,5 @@ class User
 
         return $this;
     }
+
 }

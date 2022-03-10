@@ -40,7 +40,7 @@ class ProductController extends AbstractController
      * )
      * @OA\Response(
      *     response=404,
-     *     description="No products at this page"
+     *     description="Page not found"
      * )
      * @OA\Parameter(
      *     name="page",
@@ -66,7 +66,7 @@ class ProductController extends AbstractController
             });
 
         if (count($products->getItems()) === 0) {
-            throw new NotFoundHttpException('No products at this page');
+            throw new NotFoundHttpException('Page not found');
         }
 
         return $this->json(
@@ -96,7 +96,7 @@ class ProductController extends AbstractController
      *     response=404,
      *     description="Product not found"
      * )
-     * @OA\Tag(name="Product")
+     * @OA\Tag(name="Products")
      * @Security(name="Bearer")
      */
     #[Route('/products/{id}', name: 'app_product_detail', methods: 'GET')]

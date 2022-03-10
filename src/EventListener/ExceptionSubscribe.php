@@ -12,18 +12,6 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ExceptionSubscribe implements EventSubscriberInterface
 {
-//    public function onKernelException(ExceptionEvent $event)
-//    {
-//        $exception = $event->getThrowable();
-//        if ($exception instanceof HttpExceptionInterface) {
-//            $data = [
-//                'message' => $exception->getMessage()
-//            ];
-//            $response = new JsonResponse($data, $exception->getStatusCode());
-//            $event->setResponse($response);
-//        }
-//
-//    }
 
     public function onExceptionEvent(ExceptionEvent $event)
     {

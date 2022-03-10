@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -20,37 +22,51 @@ class User
     private ?string $gender;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['list_users'])]
+    #[Groups(['list_users', 'show_user'])]
+    #[Assert\NotBlank]
     private string $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['list_users'])]
+    #[Groups(['list_users', 'show_user'])]
+    #[Assert\NotBlank]
     private string $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['list_users'])]
+    #[Groups(['list_users', 'show_user'])]
+    #[Assert\NotBlank]
     private string $email;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['show_user'])]
+    #[Assert\NotBlank]
     private string $phone_number;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['show_user'])]
     #[Assert\NotBlank]
     private string $addressLine1;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['show_user'])]
     private ?string $addressLine2;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['show_user'])]
+    #[Assert\NotBlank]
     private string $zipcode;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['show_user'])]
+    #[Assert\NotBlank]
     private string $city;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['show_user'])]
+    #[Assert\NotBlank]
     private string $country;
 
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
+    #[Ignore]
     private Customer $customer;
 
     public function getId(): ?int

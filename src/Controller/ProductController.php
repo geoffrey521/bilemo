@@ -96,7 +96,10 @@ class ProductController extends AbstractController
      *     description="Return product datas",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Product::class))
+     *        @OA\Items(ref=@Model(
+     *     type=Product::class,
+     *     groups={"show_product"}
+     *     ))
      *    )
      * )
      * @OA\Response(

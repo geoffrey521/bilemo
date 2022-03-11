@@ -17,6 +17,7 @@ class Product implements EntityTimestampableInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['show_product'])]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]

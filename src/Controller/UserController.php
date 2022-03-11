@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -59,22 +60,30 @@ class UserController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
-        $users = $this->cache->get('users_page-' . $page,
-            function (ItemInterface $item) use ($paginator, $page) {
-                $item->expiresAfter(3600);
-                return $paginator->paginate($this->getUser()->getUsers(), $page, 5);
-            });
+//        $users = $this->cache->get('users_page-' . $page,
+//            function (ItemInterface $item) use ($paginator, $page) {
+//                $item->expiresAfter(3600);
+//                return $paginator->paginate($this->getUser()->getUsers(), $page, 5);
+//            });
+
+        $users = $paginator->paginate($this->getUser()->getUsers(), $page, 10);
 
         if (count($users->getItems()) === 0) {
             throw new NotFoundHttpException('Page not found');
         }
 
-        return $this->json(
+        $response = $this->json(
             $users,
             200,
             ['Content-Type' => 'application/json'],
             ['groups' => 'list_users']
         );
+
+        $response->setEtag(md5($response->getContent()));
+        $response->setPublic(); // make sure the response is public/cacheable
+        $response->isNotModified($request);
+
+        return $response;
     }
 
     /**
@@ -98,20 +107,9 @@ class UserController extends AbstractController
      * @Security(name="Bearer")
      */
     #[Route('/users/{id}', name: 'app_user_show', methods: 'GET')]
-    public function showAction(int $id, UserRepository $userRepository)
+    #[Cache(lastModified: 'user.getUpdatedAt()', etag: "'User' ~ user.getId() ~ user.getUpdatedAt().getTimestamp()")]
+    public function showAction(User $user)
     {
-        $user = $this->cache->get('user-' . $id,
-            function (ItemInterface $item) use ($id, $userRepository) {
-                $item->expiresAfter(3600);
-                return $userRepository->findOneBy([
-                    'id' => $id,
-                    'customer' => $this->getUser()
-                ]);
-            });
-
-        if (!$user) {
-            throw new NotFoundHttpException('User not found');
-        }
 
         return $this->json(
             $user,

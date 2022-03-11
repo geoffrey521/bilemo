@@ -18,16 +18,13 @@ class User implements EntityTimestampableInterface
     use EntityTimestampableTrait;
     public function __construct()
     {
-
     }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['show_user'])]
     private int $id;
-
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private ?string $gender;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['list_users', 'show_user'])]
@@ -47,7 +44,7 @@ class User implements EntityTimestampableInterface
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['show_user'])]
     #[Assert\NotBlank]
-    private string $phone_number;
+    private string $phoneNumber;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['show_user'])]
@@ -80,18 +77,6 @@ class User implements EntityTimestampableInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
-    public function setGender(?string $gender): self
-    {
-        $this->gender = $gender;
-
-        return $this;
     }
 
     public function getFirstname(): ?string
@@ -132,12 +117,12 @@ class User implements EntityTimestampableInterface
 
     public function getPhoneNumber(): ?string
     {
-        return $this->phone_number;
+        return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phone_number): self
+    public function setPhoneNumber(string $phoneNumber): self
     {
-        $this->phone_number = $phone_number;
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }

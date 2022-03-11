@@ -1,0 +1,7 @@
+{
+  "name": "BileMo",
+  "short_name": "BM",
+  "display": "browser",
+  "scope": "/",
+  "start_url": "/api/doc"
+}

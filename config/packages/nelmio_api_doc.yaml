@@ -1,4 +1,10 @@
 nelmio_api_doc:
+    models:
+        names:
+            - { alias: Product_list,        type: App\Entity\Product, groups: [list_products]}
+            - { alias: Product_detail,        type: App\Entity\Product, groups: [show_product]}
+            - { alias: User_list,        type: App\Entity\User, groups: [list_users]}
+            - { alias: User_detail,        type: App\Entity\User, groups: [show_user]}
     documentation:
         info:
             title: BileMo

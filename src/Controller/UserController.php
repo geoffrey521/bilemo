@@ -17,7 +17,6 @@ use App\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class UserController extends AbstractController
 {
@@ -33,7 +32,10 @@ class UserController extends AbstractController
      *     description="Return list of users linked to the customer",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=User::class))
+     *        @OA\Items(ref=@Model(
+     *     type=User::class,
+     *     groups={"list_users"}
+     *     ))
      *    )
      * )
      * @OA\Response(
@@ -59,12 +61,6 @@ class UserController extends AbstractController
     )
     {
         $page = $request->query->getInt('page', 1);
-
-//        $users = $this->cache->get('users_page-' . $page,
-//            function (ItemInterface $item) use ($paginator, $page) {
-//                $item->expiresAfter(3600);
-//                return $paginator->paginate($this->getUser()->getUsers(), $page, 5);
-//            });
 
         $users = $paginator->paginate($this->getUser()->getUsers(), $page, 10);
 
@@ -92,7 +88,10 @@ class UserController extends AbstractController
      *     response=200,
      *     description="Return user datas",
      *     @OA\JsonContent(
-     *        ref=@Model(type=User::class)
+     *        ref=@Model(
+     *     type=User::class,
+     *     groups={"show_user"}
+     *     )
      *    )
      * )
      * @OA\Response(
@@ -142,7 +141,10 @@ class UserController extends AbstractController
      *     response=201,
      *     description="Return user datas",
      *     @OA\JsonContent(
-     *        ref=@Model(type=User::class)
+     *        ref=@Model(
+     *     type=User::class,
+     *     groups={"show_user"}
+     *     )
      *    )
      *
      * )
@@ -209,7 +211,10 @@ class UserController extends AbstractController
      *     response=200,
      *     description="Return user datas",
      *     @OA\JsonContent(
-     *        ref=@Model(type=User::class)
+     *        ref=@Model(
+     *     type=User::class,
+     *     groups={"show_user"}
+     *     )
      *    )
      * )
      * @OA\Response(

@@ -31,7 +31,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private string $contactLastname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $phone_number;
+    private string $phoneNumber;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $email;
@@ -96,12 +96,12 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPhoneNumber(): ?string
     {
-        return $this->phone_number;
+        return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phone_number): self
+    public function setPhoneNumber(string $phoneNumber): self
     {
-        $this->phone_number = $phone_number;
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
@@ -174,7 +174,6 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-//        $this->password = null;
     }
 
     public function getUserIdentifier(): string

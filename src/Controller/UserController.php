@@ -60,12 +60,6 @@ class UserController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
-//        $users = $this->cache->get('users_page-' . $page,
-//            function (ItemInterface $item) use ($paginator, $page) {
-//                $item->expiresAfter(3600);
-//                return $paginator->paginate($this->getUser()->getUsers(), $page, 5);
-//            });
-
         $users = $paginator->paginate($this->getUser()->getUsers(), $page, 10);
 
         if (count($users->getItems()) === 0) {

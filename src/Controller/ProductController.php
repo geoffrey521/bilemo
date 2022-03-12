@@ -64,11 +64,7 @@ class ProductController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
-        $products = $this->cache->get('products_page_' . $page,
-            function (ItemInterface $item) use ($paginator, $productRepository, $page) {
-                $item->expiresAfter(3600);
-                return $paginator->paginate($productRepository->findAll(), $page, 10);
-            });
+        $products = $paginator->paginate($productRepository->findAll(), $page, 10);
 
         if (count($products->getItems()) === 0) {
             throw new NotFoundHttpException('Page not found');
@@ -117,13 +113,18 @@ class ProductController extends AbstractController
     #[Cache(lastModified: 'product.getUpdatedAt()', etag: "'Product' ~ product.getId() ~ product.getUpdatedAt().getTimestamp()")]
     public function showAcion(Product $product)
     {
-
-        return $this->json(
+        $response = $this->json(
             $product,
             200,
             ['Content-Type' => 'application/json'],
             ['groups' => 'show_product']
         );
+
+        $response->setEtag(md5($response->getContent()));
+        $response->setPublic(); // make sure the response is public/cacheable
+        $response->setLastModified($product->getUpdatedAt());
+
+        return $response;
 
     }
 }

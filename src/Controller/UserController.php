@@ -110,12 +110,18 @@ class UserController extends AbstractController
     public function showAction(User $user)
     {
 
-        return $this->json(
+        $response = $this->json(
             $user,
             200,
             ['Content-Type' => 'application/json'],
             ['groups' => 'show_user']
         );
+
+        $response->setEtag(md5($response->getContent()));
+        $response->setPublic(); // make sure the response is public/cacheable
+        $response->setLastModified($user->getUpdatedAt());
+
+        return $response;
     }
 
     /**
@@ -180,7 +186,6 @@ class UserController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
-        $this->cache->delete('users_page');
 
         return $this->json(
             $user,
@@ -237,16 +242,19 @@ class UserController extends AbstractController
         EntityManagerInterface $entityManager
     )
     {
+
         $data = json_decode($request->getContent(), true);
         $form = $this->createForm(UserType::class, $user);
+
+
         $form->submit($data);
+
+
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
         }
-
         $entityManager->persist($user);
         $entityManager->flush();
-        $this->cache->delete('users_page');
 
         return $this->json(
             $user,

@@ -6,7 +6,6 @@ use App\Entity\Product;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 final class PaginatorNormalizer implements ContextAwareNormalizerInterface
 {

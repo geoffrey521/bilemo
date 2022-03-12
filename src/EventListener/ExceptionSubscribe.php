@@ -23,10 +23,16 @@ class ExceptionSubscribe implements EventSubscriberInterface
             $event->setResponse($response);
         }
         if ($exception instanceof HttpExceptionInterface) {
+
+            $response = new JsonResponse('Not found', $exception->getStatusCode());
+            $event->setResponse($response);
+        }
+        if ($exception instanceof \InvalidArgumentException) {
             $data = [
-                'message' => $exception->getMessage()
+                "Field error" => $exception->getMessage()
             ];
-            $response = new JsonResponse($data, $exception->getStatusCode());
+
+            $response = new JsonResponse($data, 400);
             $event->setResponse($response);
         }
     }

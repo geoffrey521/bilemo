@@ -55,10 +55,8 @@ symfony serve
 
 Local access:
 
-* Website project :
+* Documentation available at :
     * Url: "localhost:8000/api/doc"
-* Mailer :
-    * Url: "localhost:48157"
 * Adminer :
     * "localhost:8080"
         * Auth:

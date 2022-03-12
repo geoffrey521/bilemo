@@ -1,3 +1,5 @@
+[![SymfonyInsight](https://insight.symfony.com/projects/4c94dc9c-ac87-4b43-91ce-60af1ec0ba72/big.svg)](https://insight.symfony.com/projects/4c94dc9c-ac87-4b43-91ce-60af1ec0ba72)
+
 # bilemo
 An API REST project
 

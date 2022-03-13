@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\v1;
 
+use App\Entity\User;
 use App\Exception\InvalidFormException;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\User;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Annotations as OA;
 use Symfony\Contracts\Cache\CacheInterface;
 
+#[Route('/v1')]
 class UserController extends AbstractController
 {
     public function __construct(private CacheInterface $cache)

@@ -20,6 +20,14 @@ class AppFixtures extends Fixture
             ]
         );
 
+
+        CustomerFactory::createOne(
+            [
+                "email" => "email@test.test",
+                "users" => UserFactory::new()->many(10, 20)
+            ]
+        );
+
         ProductFactory::createMany(30);
 
         $manager->flush();

@@ -20,17 +20,22 @@ An API REST project
 
 1. Clone the project repository
 
+Run
 ````
 git clone https://github.com/geoffrey521/bilemo.git
 ````
 
 2. Download and install Composer dependencies
 
+In the base of the project folder: run
 ```
 composer install
 ```
 
-5. Using Database from docker
+3. Using Database
+
+* You can use our database configuration in docker-compose.yml
+For more informations about docker, visit https://docs.docker.com/
 
 Make sure docker is running, run:
 
@@ -38,18 +43,23 @@ Make sure docker is running, run:
 docker-compose up
 ````
 
-6. Update database
+* Or you can use your database by modifying the .env file
+
+DATABASE_URL="postgresql://127.0.0.1:5432/bilemo_db?serverVersion=13&charset=utf8"
+
+
+4. Update database
 
 ````
 symfony console d:m:m 
 ````
 
-7. Load data fixtures
+5. Load data fixtures
 
 ````
 symfony console d:f:l
 ````
-8. Start server
+6. Start server
 
 ````
 symfony serve
@@ -58,7 +68,7 @@ symfony serve
 Local access:
 
 * Documentation available at :
-    * Url: "localhost:8000/api/doc"
+    * Url: https://localhost:8000/api/doc
 * Adminer :
     * "localhost:8080"
         * Auth:
@@ -66,3 +76,8 @@ Local access:
             * user: "root"
             * password: "root"
             * database: "bilemo_db"
+
+    * Default customers access :
+    * You can get a token by using this credentials in api login at: https://localhost:8000/api/doc
+        * email : 	email@test.test
+        * password :  pass

@@ -110,7 +110,6 @@ class UserController extends AbstractController
     #[Cache(lastModified: 'user.getUpdatedAt()', etag: "'User' ~ user.getId() ~ user.getUpdatedAt().getTimestamp()")]
     public function showAction(User $user)
     {
-
         $response = $this->json(
             $user,
             200,
